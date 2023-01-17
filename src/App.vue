@@ -25,20 +25,20 @@ const { user } = storeToRefs(userStore);
 // const email = ref('');
 // const password = ref('');
 
-onMounted(async () => {
-  try {
-    await userStore.fetchUser(); // here we call fetch user
-    if (!user.value) {
-      // redirect them to register if the user doesn't exist
-      router.push({ path: "/auth" });
-    } else {
-      // continue to dashboard
-      router.push({ path: "/to-do" });
-    }
-  } catch (e) {
-    console.log(e);
-  }
-});
+// onMounted(async () => {
+//   try {
+//     await userStore.fetchUser(); // here we call fetch user
+//     if (!user.value) {
+//       // redirect them to register if the user doesn't exist
+//       router.push({ path: "/auth" });
+//     } else {
+//       // continue to dashboard
+//       router.push({ path: "/to-do" });
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   }
+// });
 
 
 </script>
