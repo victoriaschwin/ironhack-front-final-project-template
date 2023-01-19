@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="font-Lora">
     <router-view class="app-main" />
   </section>
   <!-- <form>
@@ -42,3 +42,7 @@ const { user } = storeToRefs(userStore);
 
 
 </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+</style>
