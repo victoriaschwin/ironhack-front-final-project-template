@@ -1,25 +1,25 @@
 <template >
   <div>
-    <div class="flex my-20 mx-16 w-4/6 h-96 bg-white">
+    <div class="flex mt-24 ml-32 w-5/6 h-full bg-white shadow-2xl">
       
       <!-- Error Message -->
 
-    <div v-if="errorMessage">
-      <p>{{ errorMessage }}</p>
+    <div v-if="errorMessage" class="absolute bottom-32 left-80">
+      <p class="p-1 text-slate-400">{{ errorMessage }}</p>
     </div>
 
     <!-- Login Form -->
       <div class="flex-col w-6/12">
 
         <div>
-          <h1 class="text-center text-xl m-7">Login</h1>
+          <h1 class="text-center text-3xl m-10">Login</h1>
         </div>
 
-        <form @submit.prevent="login" class="flex-col my-5 mx-10">
+        <form @submit.prevent="login" class="flex-col ml-28 mx-10">
 
           <div>
-            <label for="email">E-mail</label>
-            <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500"
+            <label for="email" class="text-xl mr-0.5">E-mail</label>
+            <input class="border-2 border-inherit rounded-md p-1 m-2 ml-14 text-slate-500 w-50"
             type="email" 
             id="email" 
             v-model="email" 
@@ -27,19 +27,22 @@
           </div>
 
           <div>
-            <label for="password">Contraseña</label>
-            <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500"
+            <label for="password" class="text-xl">Contraseña</label>
+            <input class="border-2 border-inherit rounded-md p-1 m-2 ml-3 text-slate-500 w-50"
             type="password" 
             id="password" 
             v-model="password" 
             required/>
           </div>
 
-          <button type="submit" class="p-3 rounded-md w-40 m-2 bg-slate-900 text-white">Enviar</button>
+          <button type="submit" class="ml-24 mt-4 p-3 rounded-md w-40 m-2 bg-slate-900 text-white">Enviar</button>
 
         </form>
-        <p>¿No tienes una cuenta?</p><router-link :to="{ path: '/auth'}"><span>Registrate</span></router-link>
-      </div>
+        
+        <div class="flex mt-4">
+          <p class="ml-24 p-1 pl-2">¿No tienes una cuenta?</p><router-link :to="{ path: '/auth'}" class="p-1 text-slate-900  hover:font-semibold"><span>Registrate</span></router-link>
+        </div>
+    </div>
 
       <div class="background-img p-2">
         <img
