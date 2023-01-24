@@ -1,11 +1,14 @@
 <template >
   <div>
     <div class="flex my-20 mx-16 w-4/6 h-96 bg-white">
-       <!-- Error Message -->
+      
+      <!-- Error Message -->
 
     <div v-if="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>
+
+    <!-- Login Form -->
       <div class="flex-col w-6/12">
 
         <div>
@@ -35,6 +38,7 @@
           <button type="submit" class="p-3 rounded-md w-40 m-2 bg-slate-900 text-white">Enviar</button>
 
         </form>
+        <p>¿No tienes una cuenta?</p><router-link :to="{ path: '/auth'}"><span>Registrate</span></router-link>
       </div>
 
       <div class="background-img p-2">
@@ -64,7 +68,7 @@ const login = async () => {
       password : password.value
     });
     if(error) throw error;
-    router.push({path: '/to-do'})
+    router.push({path: '/'})
   }
   catch(error){
     errorMessage.value = `Error: ${error.message}`;

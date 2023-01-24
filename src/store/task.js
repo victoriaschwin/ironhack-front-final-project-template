@@ -15,36 +15,65 @@ export const useTaskStore = defineStore("tasks", {
         .order("id", { ascending: false });
       this.tasks = tasks;
     },
+
     // Hacer POST
-    async postTask(){
-      const { data, error } = await supabase
-      .from('tasks')
-      .insert([
-    { some_column: 'someValue' },
-    { some_column: 'otherValue' },
-  ])
+
+    async postTask(title, description, user) {
+      try {
+        const { error } = await supabase
+          .from("tasks")
+          .insert(
+            { title: title,
+              description: description,
+              is_complete: false,
+              user_id: user },
+          );
+          this.fetchTasks();
+      } catch (error) {
+        throw error.message;
+      }
     },
+
     // Hacer el PUT (edit)
-    async editTask(){
-      console.log('hola')
-      const { data, error } = await supabase
-      .from('tasks')
-      .update({ other_column: 'otherValue' })
-      .eq('some_column', 'someValue')
+
+    async editTask(title, description, id) {
+      try{
+        const { error } = await supabase
+        .from("tasks")
+        .update({ title: title }, { description: description })
+        .match({ id: id });
+        this.fetchTasks(); 
+      }catch(error){
+        throw error.message
+      }
     },
+
     // Hacer el delete
-    async deleteTask(){
-      const { data, error } = await supabase
-    .from('tasks')
-    .delete()
-    .eq('some_column', 'someValue')
+
+    async deleteTask(id) {
+      try{
+        const { error } = await supabase
+        .from("tasks")
+        .delete()
+        .match({ id: id });
+        this.fetchTasks();
+      }catch(error){
+        throw error.message
+      }
     },
+
     // Hacer el PUT (cambiar entre completada y pendiente)
-    async completeTask(){
-        const { data, error } = await supabase
-        .from('tasks')
-        .update({ other_column: 'otherValue' })
-        .eq('some_column', 'someValue')
-    }
+
+    async completeTask(id) {
+      try{
+        const { error } = await supabase
+        .from("tasks")
+        .update({ is_complete: true })
+        .match({ id: id });
+        this.fetchTasks();
+      }catch{
+        throw error.message
+      }
+    },
   },
 });
