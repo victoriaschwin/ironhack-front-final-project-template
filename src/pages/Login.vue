@@ -60,6 +60,8 @@ import { supabase } from '../supabase';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+
+// Form
 const email = ref('');
 const password = ref('');
 const errorMessage = ref(null);

@@ -16,7 +16,7 @@ export const useTaskStore = defineStore("tasks", {
       this.tasks = tasks;
     },
 
-    // Hacer POST
+    // POST
 
     async postTask(title, description, user) {
       try {
@@ -34,7 +34,7 @@ export const useTaskStore = defineStore("tasks", {
       }
     },
 
-    // Hacer el PUT (edit)
+    // PUT (edit)
 
     async editTask(title, description, id) {
       try{
@@ -48,7 +48,7 @@ export const useTaskStore = defineStore("tasks", {
       }
     },
 
-    // Hacer el delete
+    // DELETE
 
     async deleteTask(id) {
       try{
@@ -62,7 +62,7 @@ export const useTaskStore = defineStore("tasks", {
       }
     },
 
-    // Hacer el PUT (cambiar entre completada y pendiente)
+    // PUT (cambiar entre completada y pendiente)
 
     async completeTask(id) {
       try{

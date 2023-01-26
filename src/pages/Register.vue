@@ -1,23 +1,24 @@
 <template >
-  <div class="flex my-20 mx-16 w-4/6 h-96 bg-white">
+  <div class="flex mt-24 ml-32 w-5/6 h-full bg-white shadow-2xl">
+    
     <!-- Error Message -->
 
-    <div v-if="errorMessage">
-      <p>{{ errorMessage }}</p>
+    <div v-if="errorMessage" class="absolute bottom-32 left-64">
+      <p class="p-1 text-slate-400">{{ errorMessage }}</p>
     </div>
 
     <!-- Formulario Crear Cuenta -->
     <div class="flex-col w-6/12">
 
       <div>
-        <h1 class="text-center text-xl m-7">Crea tu cuenta</h1>
+        <h1 class="text-center text-3xl mt-10 mb-6">Crea tu cuenta</h1>
       </div>
 
-      <form @submit.prevent="register" class="flex-col my-5 mx-10">
+      <form @submit.prevent="register" class="flex-col ml-28 mx-10">
 
-        <div class="">
-          <label for="name">Nombre</label>
-          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500"
+        <div>
+          <label for="name" class="text-xl mr-8">Nombre</label>
+          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500 w-50"
           type="text" 
           id="name" 
           v-model="name" 
@@ -25,41 +26,31 @@
         </div>
 
         <div>
-          <label for="email">E-mail</label>
-          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500" 
+          <label for="email" class="text-xl mr-12">E-mail</label>
+          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500 w-50" 
           type="email" 
           id="email" v-model="email" 
           required/>
         </div>
 
         <div>
-          <label for="password">Contraseña</label>
-          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500"
+          <label for="password" class="text-xl mr-0.5">Contraseña</label>
+          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500 w-50"
           type="password" 
           id="password" 
           v-model="password"  
           required />
-          <p class="text-slate-500 m-1"> Debe incluir mínimo 8 caracteres incluyendo minúscula, mayúscula y un número.</p>
+          <p class="text-slate-500 mt-4 mb-4 text-xs"> Mínimo 8 carácteres incluyendo minúscula, mayúscula y un número.</p>
         </div>
 
-        <div>
-          <label for="passwordVer">Verifica Contraseña</label>
-          <input class="border-2 border-inherit rounded-md p-1 m-2 text-slate-500"
-          type="password" 
-          id="passwordVer" 
-          v-model="passwordVer"  
-          required />
-          <p class="text-slate-500 m-1"> Debe incluir mínimo 8 caracteres incluyendo minúscula, mayúscula y un número.</p>
-        </div>
-
-        <button type="submit" class="p-3 rounded-md w-40 m-2 bg-slate-900 text-white">Enviar</button>
+        <button type="submit" class="p-3 rounded-md w-40 m-2 ml-24 bg-slate-900 text-white">Enviar</button>
 
       </form>
     </div>
 
     <div class="background-img p-2">
       <img
-        src="https://images.unsplash.com/photo-1542435503-956c469947f6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHdvcmslMjBiYWNrZ3JvdW5kfGVufDB8fDB8fA%3D%3D&w=1000&q=80"
+        src="https://wallpaperaccess.com/full/5673918.jpg"
         alt="background image of a desk" />
     </div>
 
@@ -72,16 +63,17 @@ import { supabase } from '../supabase';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+// Form
 const name = ref('');
 const email = ref('');
 const password = ref('');
-const passwordVer = ref('');
-
 const errorMessage = ref(null);
-// const passwordValidation = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+
+const passwordValidation = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
 
 const register = async () => {
- if (password.value === passwordVer.value){
+if(password.value == passwordValidation){
+
   try{
     const{error} = await supabase.auth.signUp({
       email: email.value,
@@ -89,13 +81,13 @@ const register = async () => {
     });
     if (error) throw error;
     router.push({ path: "/to-do"});
+
+    return
   }
   catch(error){
     errorMessage.value = error.message;
   }
- }else{
-  errorMessage.value = "Tu contraseña no cumple los requisitos"
- }
+}
 }
 
 </script>

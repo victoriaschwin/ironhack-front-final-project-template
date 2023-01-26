@@ -4,12 +4,13 @@
     <input type="checkbox" class="ml-8">
 
     <div class="flex flex-col content-start py-5">
-      <input type="text"  class="text-2xl font-semibold text-slate-800 ml-10" :disabled="editView"/>
-      <input type="text"  class="text-base text-slate-500 w-40 font-medium ml-10" :disabled="editView"/>
+      <input type="text" v-model="title" placeholder="" class="text-2xl font-semibold text-slate-800 ml-10" :disabled="editView"/>
+      <input type="text" v-moldel="description" placeholder="" class="text-base text-slate-500 w-40 font-medium ml-10" :disabled="editView"/>
     </div>
   
     <div class="flex flex-col px-7 py-5">
-      <button @click="editTask()" class="text-lg text-slate-800 py-2">Editar</button>
+      <button v-if="editView" @click="editTask()" class="text-lg text-slate-800 py-2">Editar</button>
+      <button v-else @click="saveEditTask(task.id)" class="text-lg text-slate-800 py-2">Guardar</button>
       <button @click="deleteTask(task.id)" class="text-lg text-slate-800">Borrar</button>
     </div>
     
@@ -22,18 +23,42 @@
 <script setup>
 import { ref } from 'vue';
 import { useTaskStore } from '../store/task';
+import { useUserStore } from '../store/user';
 
+
+const userStore = useUserStore();
 const taskStore = useTaskStore();
 const props = defineProps(["task"]);
 
-const done = ref(null);
 const editView = ref(true);
-const errorMessage = ref(null)
 
-function editTask(){
-  console.log('hola')
+// Task inputs
+const title = ref('');
+const description = ref('');
+const errorMessage = ref(null);
+const doneCheckbox = ref(null);
+
+// V-if function
+function editTask(){  
 editView.value = !editView.value;
 }
+
+// Tasks functions
+
+// PUT inputs
+async function saveEditTask(id){
+  try{
+    await taskStore.editTask(title.value,description.value,id);
+    editView.value = !editView.value;
+    if(error) throw error
+  }
+  catch(error){
+    errorMessage.value = error.message;
+  }
+}
+
+// PUT complete
+
 
 async function deleteTask(id){
 

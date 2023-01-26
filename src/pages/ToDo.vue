@@ -20,22 +20,23 @@
     
     <section id="to-do" class="mx-10 ">
       <h2 class="text-center text-xl m-7 text-lg text-slate-500">Pendientes</h2>
-      <p v-if="!data">No tienes tareas aún</p>
+      <p v-if="!tasksUncompleted.value">No tienes tareas aún</p>
       <Task v-else v-for="task in tasksUncompleted" :key="task.id" :task="task"/>
     </section>
 
     <div class="border-l-2 border-stone-300 h-60 mt-12 "></div>
-    
+
     <section id="done" class="mx-10 ">
       <h2 class="text-center text-xl m-7 text-lg text-slate-500">Completadas</h2>
-      <Task v-if="!tasksCompleted.length" v-for="task in tasksCompleted" :key="task.id" :task="task" />
+      <Task v-if="!tasksCompleted.value" v-for="task in tasksCompleted" :key="task.id" :task="task" />
 
     </section>
     
   </div>
 
   <div class="flex justify-center">
-    <button class="py-3 px-12 m-4 mb-10 bg-slate-700 text-white text-lg rounded-lg hover:text-slate-700 hover:bg-white hover:border-slate-700 hover:border" @click="handlePopUp()">Agregar</button> 
+    <button class="py-3 px-12 m-4 mb-10 bg-slate-700 text-white text-lg rounded-lg hover:text-slate-700 hover:bg-white hover:border-slate-700 hover:border" 
+    @click="closePopUp()">Agregar</button> 
   </div>
   
 </div>
@@ -46,23 +47,23 @@
     
     <button @click="closePopUp()" class="absolute right-10 top-4 text-slate-500">x</button>
     
-    <h2 class="text-xl m-7 mt-14 text-black text-3xl font-semibold">Añade una nueva tarea</h2>
+    <h2 class="text-xl mb-2 mt-8 text-black text-3xl font-semibold">Añade una nueva tarea</h2>
     
     <div class=" flex flex-col items-start">
 
-    <label for="title" class="text-black text-lg ">Título</label>
-    <input class="p-1 rounded border-2" 
+    <label for="title" class="text-black text-xl p-1">Título</label>
+    <input class="p-1 rounded border-2 w-80 h-10" 
     type="text" 
     id="title" 
     v-model="title" 
     required>
 
-    <label for="description" class="text-black text-lg">Descripción</label>
-    <input class="p-1 rounded border-2" 
+    <label for="description" class="text-black text-xl p-1">Descripción</label>
+    <textarea class="p-1 rounded border-2 w-80 h-32" 
     type="text" 
     id="description" 
     v-model="description" 
-    required>
+    required></textarea>
 </div>
 
     <button type="submit" class="py-3 px-12 m-4 bg-slate-700 text-white text-lg rounded-lg hover:text-slate-700 hover:bg-white hover:border-slate-700 hover:border ">Enviar</button>
@@ -81,39 +82,46 @@ import router from '../router';
 const userStore = useUserStore();
 const taskStore = useTaskStore();
 
-const data = ref(taskStore.tasks);
+// Task data
+const data = ref([]);
 const tasksUncompleted = ref([]);
 const tasksCompleted = ref([]);
+
+// Form inputs
 const title = ref('');
 const description = ref('');
 const errorMessage = ref(null);
+
+
 const popUp = ref(false);
 const date = ref(new Date().toLocaleDateString())
 
-//Funcion para renderizado condicional del form agregar tarea.
+//V-if function.
 
 function closePopUp(){
 popUp.value = !popUp.value;
 }
 
-//Fetch Tasks
+//Fetch Tasks from Store
 onMounted( async () => {
   try{
     await taskStore.fetchTasks(userStore.user.id); 
-    
+    data.value = taskStore.tasks
   }catch (error){
     console.log(error)
   }
 })
+
 //Filter tasks
 
-// function filterCompleted(data){
-//   tasksCompleted.value = data.filter((task) => task.is_complete === true);
-//   tasksUncompleted.value = data.filter((task) => task.is_complete === false);
-// }
+function filterCompleted(){
+  tasksCompleted.value = data.value.filter((task) => task.is_complete === true);
+  tasksUncompleted.value = data.value.filter((task) => task.is_complete === false);
+}
 
-// filterCompleted(data.value);
+filterCompleted();
 
+console.log(tasksCompleted.value)
 
 //POST Nueva Tarea
 
@@ -121,13 +129,15 @@ async function postNewTask() {
 
 try {
       await taskStore.postTask(title.value, description.value, userStore.user.id);
+      popUp.value = !popUp.value;
       if (error)throw error;
-      addNewTask.value = false;
+      
 } catch (error) {
 errorMessage.value = error.message;
 }
 }
 
+//User 
 
 const logout = async () => {
   await userStore.signOut();
