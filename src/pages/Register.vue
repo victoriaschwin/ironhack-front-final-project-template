@@ -69,13 +69,12 @@ const email = ref('');
 const password = ref('');
 const errorMessage = ref(null);
 
-const passwordValidation = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+const passwordValidation = new RegExp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"); 
 
 const register = async () => {
-if(password.value == passwordValidation){
 
   try{
-    const{error} = await supabase.auth.signUp({
+    const {error} = await supabase.auth.signUp({
       email: email.value,
       password: password.value
     });
@@ -88,7 +87,7 @@ if(password.value == passwordValidation){
     errorMessage.value = error.message;
   }
 }
-}
+
 
 </script>
 

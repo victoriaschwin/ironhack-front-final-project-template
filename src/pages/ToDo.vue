@@ -20,15 +20,15 @@
     
     <section id="to-do" class="mx-10 ">
       <h2 class="text-center text-xl m-7 text-lg text-slate-500">Pendientes</h2>
-      <p v-if="!tasksUncompleted.value">No tienes tareas aún</p>
-      <Task v-else v-for="task in tasksUncompleted" :key="task.id" :task="task"/>
+      <p v-if="tasksUncompleted.length == 0" class="text-base mt-60">No tienes tareas aún</p>
+      <Task v-for="task in tasksUncompleted" :key="task.id" :task="task" @handle-change="handleChange" />
     </section>
 
-    <div class="border-l-2 border-stone-300 h-60 mt-12 "></div>
+    <div class="border-l-2 border-stone-300 h-screen mt-12 "></div>
 
     <section id="done" class="mx-10 ">
       <h2 class="text-center text-xl m-7 text-lg text-slate-500">Completadas</h2>
-      <Task v-if="!tasksCompleted.value" v-for="task in tasksCompleted" :key="task.id" :task="task" />
+      <Task v-if="!tasksCompleted.value" v-for="task in tasksCompleted" :key="task.id" :task="task" @handle-change="handleChange"/>
 
     </section>
     
@@ -92,7 +92,6 @@ const title = ref('');
 const description = ref('');
 const errorMessage = ref(null);
 
-
 const popUp = ref(false);
 const date = ref(new Date().toLocaleDateString())
 
@@ -102,26 +101,31 @@ function closePopUp(){
 popUp.value = !popUp.value;
 }
 
+async function getData(){
+  try{
+    await taskStore.fetchTasks(userStore.user.id); 
+    data.value = taskStore.tasks;
+    tasksCompleted.value = taskStore.tasks.filter((task) => task.is_complete);
+    tasksUncompleted.value = taskStore.tasks.filter((task) => task.is_complete == false);
+  } catch (error){
+    console.log('Error',error)
+  }
+}
+
+const handleChange = async () =>{
+  await getData();
+}
+
 //Fetch Tasks from Store
 onMounted( async () => {
   try{
-    await taskStore.fetchTasks(userStore.user.id); 
-    data.value = taskStore.tasks
+    
+    getData();
+    
   }catch (error){
     console.log(error)
   }
 })
-
-//Filter tasks
-
-function filterCompleted(){
-  tasksCompleted.value = data.value.filter((task) => task.is_complete === true);
-  tasksUncompleted.value = data.value.filter((task) => task.is_complete === false);
-}
-
-filterCompleted();
-
-console.log(tasksCompleted.value)
 
 //POST Nueva Tarea
 
@@ -130,6 +134,7 @@ async function postNewTask() {
 try {
       await taskStore.postTask(title.value, description.value, userStore.user.id);
       popUp.value = !popUp.value;
+      getData();
       if (error)throw error;
       
 } catch (error) {
