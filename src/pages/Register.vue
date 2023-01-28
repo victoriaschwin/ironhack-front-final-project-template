@@ -79,7 +79,7 @@ const register = async () => {
       password: password.value
     });
     if (error) throw error;
-    router.push({ path: "/to-do"});
+    router.push({ path: "/auth"});
 
     return
   }
@@ -95,6 +95,8 @@ const register = async () => {
 .background-img {
   width: 50%;
   height: 100%;
+  margin: 1.5rem 1.5rem ;
+  margin-left: 0;
 }
 
 body {
